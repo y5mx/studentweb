@@ -3,14 +3,12 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-// Define the type for route context parameters
-/*
-type RouteContext = {
+// Define the route params interface
+interface RouteParams {
   params: {
     id: string;
   };
-};
-*/
+}
 
 const TaskUpdateSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
@@ -45,7 +43,7 @@ type TaskUpdateData = {
 // Update a task
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   const { id } = params;
   const session = await getServerSession();
@@ -129,8 +127,8 @@ export async function PATCH(
 
 // Delete a task
 export async function DELETE(
-    request: NextRequest,
-    { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: RouteParams
 ) {
   const { id } = params;
   const session = await getServerSession();
@@ -181,4 +179,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}
