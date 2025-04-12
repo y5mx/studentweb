@@ -120,7 +120,7 @@ export async function PATCH(
 
 // Delete a task
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
