@@ -18,12 +18,27 @@ const TaskUpdateSchema = z.object({
   category: z.string().optional(),
 });
 
+// Define the type for task update data
+type TaskUpdateData = {
+  title?: string;
+  description?: string | null;
+  dueDate?: Date | null;
+  priority?: "LOW" | "NORMAL" | "HIGH" | "URGENT";
+  completed?: boolean;
+  recurrence?: "NONE" | "DAILY" | "WEEKDAYS" | "WEEKLY" | "BIWEEKLY" | "MONTHLY" | "YEARLY" | "CUSTOM";
+  recurrenceEnd?: Date | null;
+  estimatedMinutes?: number | null;
+  reminderTime?: Date | null;
+  tags?: string | null;
+  category?: string;
+};
+
 // Update a task
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = params;
   const session = await getServerSession();
   
   if (!session?.user?.email) {
@@ -61,7 +76,7 @@ export async function PATCH(
     const validatedData = TaskUpdateSchema.parse(body);
 
     // Build update data object
-    const updateData: any = {};
+    const updateData: TaskUpdateData = {};
     
     // Add basic task fields
     if (validatedData.title !== undefined) updateData.title = validatedData.title;
@@ -106,9 +121,9 @@ export async function PATCH(
 // Delete a task
 export async function DELETE(
   _request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = params;
   const session = await getServerSession();
   
   if (!session?.user?.email) {
