@@ -43,7 +43,7 @@ type TaskUpdateData = {
 // Update a task
 export async function PATCH(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   const { id } = params;
   const session = await getServerSession();
@@ -128,7 +128,7 @@ export async function PATCH(
 // Delete a task
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   const { id } = params;
   const session = await getServerSession();
@@ -180,4 +180,3 @@ export async function DELETE(
     );
   }
 }
-// test
