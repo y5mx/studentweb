@@ -45,9 +45,9 @@ type TaskUpdateData = {
 // Update a task
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = context.params;
   const session = await getServerSession();
   
   if (!session?.user?.email) {
@@ -130,9 +130,9 @@ export async function PATCH(
 // Delete a task
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = context.params;
   const session = await getServerSession();
   
   if (!session?.user?.email) {
