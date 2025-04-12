@@ -3,6 +3,15 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+// Define the type for route context parameters
+/*
+type RouteContext = {
+  params: {
+    id: string;
+  };
+};
+*/
+
 const TaskUpdateSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
   description: z.string().optional().nullable(),
@@ -120,10 +129,9 @@ export async function PATCH(
 
 // Delete a task
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = params;
   const session = await getServerSession();
   
   if (!session?.user?.email) {
