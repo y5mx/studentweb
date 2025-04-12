@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 // Define the route params interface
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
+// interface RouteParams {
+//   params: {
+//     id: string;
+//   };
+// }
 
 const TaskUpdateSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
@@ -120,62 +120,6 @@ export async function PATCH(
     console.error("Error updating task:", error);
     return NextResponse.json(
       { error: "Failed to update task" },
-      { status: 500 }
-    );
-  }
-}
-
-// Delete a task
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  const session = await getServerSession();
-  
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  try {
-    // First get the user by email
-    const user = await prisma.user.findUnique({
-      where: {
-        email: session.user.email,
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Check if task exists and belongs to the user
-    const task = await prisma.task.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!task) {
-      return NextResponse.json({ error: "Task not found" }, { status: 404 });
-    }
-
-    if (task.userId !== user.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    // Delete the task
-    await prisma.task.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting task:", error);
-    return NextResponse.json(
-      { error: "Failed to delete task" },
       { status: 500 }
     );
   }
